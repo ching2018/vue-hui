@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     export default {
         name: 'hui-overlay',
         props: {

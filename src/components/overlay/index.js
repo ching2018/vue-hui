@@ -1,1 +1,2 @@
-module.exports = require('./src/overlay.vue');
+import Overlay from './src/overlay.vue';
+export { Overlay };

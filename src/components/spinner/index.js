@@ -1,1 +1,2 @@
-module.exports = require('./src/spinner.vue');
+import Spinner from './src/spinner.vue';
+export { Spinner };
