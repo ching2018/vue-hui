@@ -1,0 +1,17 @@
+.m-flexbox {
+  display: flex;
+  align-items: center;
+  &.flexbox-horizontal {
+
+  }
+  &.flexbox-vertical {
+    flex-direction: column;
+    height: 100%;
+    .flexbox-item {
+      width: 100%;
+    }
+  }
+  .flexbox-item {
+    flex: 1;
+  }
+}

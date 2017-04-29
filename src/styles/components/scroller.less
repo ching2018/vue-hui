@@ -1,0 +1,103 @@
+.root {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.div-scroll-inner {
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.div-refresh {
+    width: 100%;
+    padding-bottom: 20px;
+    color: #a1a1a1;
+    text-align: center;
+}
+
+.div-refresh .div-down {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('../../images/arrow.svg') no-repeat 50%;
+    background-size: 100%;
+    vertical-align: middle;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+
+.div-refresh .div-up {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('../../images/arrow.svg') no-repeat 50%;
+    background-size: 100%;
+    vertical-align: middle;
+    transform: rotate(180deg);
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+
+.div-refresh .div-refreshing {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('../../images/ic-loading.png') no-repeat 50%;
+    background-size: 100%;
+    vertical-align: middle;
+    -webkit-animation: rotation 2s linear infinite;
+}
+
+.div-refresh span {
+    display: block;
+    margin-left: 10px;
+    margin: auto;
+}
+
+.div-loading {
+    width: 100%;
+    padding-bottom: 20px;
+    color: #a1a1a1;
+    text-align: center;
+    align-items: center;
+}
+
+.div-loading img {
+    width: 20px;
+    -webkit-animation: rotation 2s linear infinite;
+}
+
+.div-loading span {
+    display: block;
+    margin-left: 10px;
+    margin: auto;
+}
+
+@-webkit-keyframes rotation {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.no-data-text {
+    width: 100%;
+    height: 44px;
+    z-index: 1;
+    text-align: center;
+    line-height: 44px;
+    opacity: 0;
+    transition: opacity .15s linear;
+    -webkit-transition: opacity .15s linear;
+}
+
+.no-data-text.active {
+    opacity: 1;
+}
