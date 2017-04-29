@@ -18,7 +18,7 @@ module.exports = merge(baseWebpackConfig, {
     },
     plugins: [
         new webpack.BannerPlugin(pkg.name + ' v' + pkg.version + ' by YDCSS (c) ' + new Date().getFullYear() + ' Licensed ' + pkg.license),
-        new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+        //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
         new webpack.optimize.OccurenceOrderPlugin()
     ]
 });

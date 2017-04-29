@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-    name: 'scroller',
+    name: 'hui-scroller',
     props: {
         // 下拉刷新函数
         onRefresh: {
