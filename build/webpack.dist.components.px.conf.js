@@ -14,10 +14,12 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/input/index": "./src/components/input/index.js", //输入框
         "/lib.px/overlay/index": "./src/components/overlay/index.js", //遮罩层
         "/lib.px/popup/index": "./src/components/popup/index.js", //弹层
+        "/lib.px/prompt/index": "./src/components/prompt/index.js", //对话框
         "/lib.px/scroller/index": "./src/components/scroller/index.js", //上拉加载与下拉刷新
         "/lib.px/sendcode/index": "./src/components/sendcode/index.js", //发送验证码
         "/lib.px/slider/index": "./src/components/slider/index.js", //图片轮播
         "/lib.px/spinner/index": "./src/components/spinner/index.js", //spinner
+        "/lib.px/swiper/index": "./src/components/swiper/index.js", //图片轮播
         "/lib.px/switch/index": "./src/components/switch/index.js", //开关
         "/lib.px/textarea/index": "./src/components/textarea/index.js", //多行文本框
         "/lib.px/toast/index": "./src/components/toast/index.js", //提示窗

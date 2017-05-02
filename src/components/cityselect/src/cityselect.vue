@@ -58,7 +58,7 @@
     import Citys from './hui.citys';
 
     export default {
-        name: 'hui-cityselect',
+        name: 'hui-city-select',
         data() {
             return {
                 citys: Citys,

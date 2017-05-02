@@ -1,5 +1,5 @@
 <template>
-    <div class="vmc-mask"
+    <div class="overlay-mask"
          :class="transparent ? 'transparent' : 'black'"
          @click.stop="_onClick"
          v-stop.move>

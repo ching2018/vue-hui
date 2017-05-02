@@ -12,6 +12,9 @@
 </template>
 
 <script type="es6">
+    import Overlay from '../../overlay/src/overlay.vue';
+    import Spinner from '../../spinner/src/spinner.vue';
+
     const TOASTS = [
         'loading',
         'success',
@@ -20,6 +23,11 @@
     ];
 
     export default {
+        name: 'hui-toast',
+        components: {
+            'hui-overlay': Overlay,
+            'hui-spinner': Spinner
+        },
         data() {
             return {
                 type: 'loading',

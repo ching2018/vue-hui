@@ -13,10 +13,12 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.rem/input/index": "./src/components/input/index.js", //输入框
         "/lib.rem/overlay/index": "./src/components/overlay/index.js", //遮罩层
         "/lib.rem/popup/index": "./src/components/popup/index.js", //弹层
+        "/lib.rem/prompt/index": "./src/components/prompt/index.js", //对话框
         "/lib.rem/scroller/index": "./src/components/scroller/index.js", //上拉加载与下拉刷新
         "/lib.rem/sendcode/index": "./src/components/sendcode/index.js", //发送验证码
         "/lib.rem/slider/index": "./src/components/slider/index.js", //图片轮播
         "/lib.rem/spinner/index": "./src/components/spinner/index.js", //spinner
+        "/lib.rem/swiper/index": "./src/components/swiper/index.js", //图片轮播
         "/lib.rem/switch/index": "./src/components/switch/index.js", //开关
         "/lib.rem/textarea/index": "./src/components/textarea/index.js", //多行文本框
         "/lib.rem/toast/index": "./src/components/toast/index.js", //提示窗

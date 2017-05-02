@@ -15,48 +15,43 @@
 
 .div-refresh {
     width: 100%;
-    padding-bottom: 20px;
     color: #a1a1a1;
     text-align: center;
-}
-
-.div-refresh .div-down {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url('../../images/arrow.svg') no-repeat 50%;
-    background-size: 100%;
-    vertical-align: middle;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s;
-}
-
-.div-refresh .div-up {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url('../../images/arrow.svg') no-repeat 50%;
-    background-size: 100%;
-    vertical-align: middle;
-    transform: rotate(180deg);
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s;
-}
-
-.div-refresh .div-refreshing {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background: url('../../images/ic-loading.png') no-repeat 50%;
-    background-size: 100%;
-    vertical-align: middle;
-    -webkit-animation: rotation 2s linear infinite;
-}
-
-.div-refresh span {
-    display: block;
-    margin-left: 10px;
-    margin: auto;
+    align-items: center;
+    .div-down {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url('../../images/arrow.svg') no-repeat 50%;
+        background-size: 100%;
+        vertical-align: middle;
+        -webkit-transition-duration: .3s;
+        transition-duration: .3s;
+    }
+    .div-up {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url('../../images/arrow.svg') no-repeat 50%;
+        background-size: 100%;
+        vertical-align: middle;
+        transform: rotate(180deg);
+        -webkit-transition-duration: .3s;
+        transition-duration: .3s;
+    }
+    .div-refreshing {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: url('../../images/ic-loading.png') no-repeat 50%;
+        background-size: 100%;
+        vertical-align: middle;
+        -webkit-animation: rotation 2s linear infinite;
+    }
+    span {
+        display: block;
+        text-align: center;
+    }
 }
 
 .div-loading {
@@ -65,17 +60,16 @@
     color: #a1a1a1;
     text-align: center;
     align-items: center;
-}
-
-.div-loading img {
-    width: 20px;
-    -webkit-animation: rotation 2s linear infinite;
-}
-
-.div-loading span {
-    display: block;
-    margin-left: 10px;
-    margin: auto;
+    img {
+        margin: 0 auto;
+        width: 20px;
+        -webkit-animation: rotation 2s linear infinite;
+    }
+    span {
+        display: block;
+        margin-left: 10px;
+        margin: auto;
+    }
 }
 
 @-webkit-keyframes rotation {
@@ -98,6 +92,6 @@
     -webkit-transition: opacity .15s linear;
 }
 
-.no-data-text.active {
+.active {
     opacity: 1;
 }

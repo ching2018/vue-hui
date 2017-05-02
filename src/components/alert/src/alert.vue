@@ -1,53 +1,50 @@
 <template>
-    <div class="g-layerWrap">
-        <div class="m-alert">
-            <div class="alert-mainWrap">
-                <div class="alert-titleWrap" v-show="title">
-                    <h3 class="title f-bw">{{title}}</h3>
-                </div>
-                <div class="alert-ctnWrap" v-show="message">
-                    <p class="ctn f-bw" v-html="message"></p>
-                </div>
-            </div>
-            <div class="alert-btnWrap retainbt">
-                <button  class="btn" v-on:click="confirm()" type="button">{{confirmTxt}}</button>
-            </div>
+    <hui-dialogbox :show="show" class="vmc-alert" :class="{'no-content': !content}">
+        <div name="header">
+            <div><p>{{title}}</p></div>
         </div>
-    </div>
+        <div name="content" v-html="content" v-if="content"></div>
+        <div name="footer">
+            <span class="primary" @click.stop="_onConfirm">
+                {{button}}
+            </span>
+        </div>
+    </hui-dialogbox>
 </template>
 
-<style>
-    @media screen and (min-width: 320px) {
-        html {
-            font-size: 10px;
-        }
-    }
+<script type="es6">
+    import DialogBox from '../../dialogbox/src/dialogbox.vue';
 
-    @media screen and (min-width: 375px) {
-        html {
-            font-size: 12px;
-        }
-    }
-
-    @media screen and(min-width: 414px) {
-        html {
-            font-size: 14px;
-        }
-    }
-
-    @media screen and(min-width: 600px) {
-        html {
-            font-size: 16px;
-        }
-    }
-</style>
-
-<style  lang="less" scoped>
-    @import "../../../styles/components/alert.less";
-</style>
-
-<script type="text/ecmascript-6" lang="babel">
     export default {
+        name: 'hui-alert',
+        components: {
+            'hui-dialogbox': DialogBox
+        },
+        data() {
+            return {
+                show: false,
+                title: '',
+                content: '',
+                callback: null,
+                button: '确定'
+            }
+        },
+        methods: {
+            _onConfirm(e) {
+                this.show = false;
+                this.$emit('on-confirm', e);
 
-    };
+                if (this.callback && typeof this.callback === 'function') {
+                    this.callback();
+                }
+            },
+            _show(options) {
+                Object.keys(options).forEach(v => this[v] = options[v]);
+                this.show = true;
+            }
+        }
+    }
 </script>
+<style lang="less">
+    @import '../../../styles/components/alert.less';
+</style>

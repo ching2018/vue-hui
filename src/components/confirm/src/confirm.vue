@@ -1,33 +1,64 @@
 <template>
-	<div class="g-layerWrap">
-		<div class="m-confirm" :style="{width: confirmWidth}">
-			<div class="confirm-mainWrap">
-				<div class="confirm-icnWrap" v-if="icon">
-					  <i class="icn" :class="[icon]"></i>
-				</div>
-				<div class="confirm-titleWrap" v-if="title">
-					<h3 class="title f-bw">{{title}}</h3>
-				</div>
-				<div class="confirm-ctnWrap" v-if="message">
-					<p class="ctn f-bw" v-html="message"></p>
-				</div>
-			</div>
-			<div class="confirm-btnWrap retainbt">
-				<button class="btn btn-half btn-sub retainbr" :style="{color: cancelColor}" @click="onCancel()" type="button">{{cancelTxt}}</button>
-				<button class="btn btn-half" :style="{color: confirmColor}" @click="onConfirm()" type="button">{{confirmTxt}}</button>
-			</div>
-		</div>
-	</div>
+    <hui-dialogbox :show="show" class="vmc-confirm" :class="{'no-content': !content}">
+        <div name="header">
+            <div><p>{{title}}</p></div>
+        </div>
+        <div name="content" v-html="content" v-if="content"></div>
+        <div name="footer">
+            <span class="vmc-1px-right" :class="type === 0 ? 'default' : 'primary'" @click.stop="_onCancel">
+                {{btn1}}
+            </span>
+            <span class="primary" @click.stop="_onConfirm">
+                {{btn2}}
+            </span>
+        </div>
+    </hui-dialogbox>
 </template>
-<style>
-	@import "../../../styles/components/media_query.less";
-</style>
-<style lang="less" scoped>
-	@import "../../../styles/components/1px_border.less";
-	@import "../../../styles/components/confirm.less";
-</style>
-<script>
-	export default{
 
-	}
+<script type="es6">
+    import DialogBox from '../../dialogbox/src/dialogbox.vue';
+
+    export default {
+        name: 'hui-confirm',
+        components: {
+            'hui-dialogbox': DialogBox
+        },
+        data() {
+            return {
+                show: false,
+                title: '',
+                content: '',
+                confirm: null,
+                cancel: null,
+                btn1: '取消',
+                btn2: '确定',
+                type: 0
+            }
+        },
+        methods: {
+            _onConfirm(e) {
+                this.show = false;
+                this.$emit('on-confirm', e);
+
+                if (this.confirm && typeof this.confirm === 'function') {
+                    this.confirm();
+                }
+            },
+            _onCancel(e) {
+                this.show = false;
+                this.$emit('on-cancel', e);
+
+                if (this.cancel && typeof this.cancel === 'function') {
+                    this.cancel();
+                }
+            },
+            _show(options) {
+                Object.keys(options).forEach(v => this[v] = options[v]);
+                this.show = true;
+            }
+        }
+    }
 </script>
+<style lang="less">
+    @import '../../../styles/components/confirm.less';
+</style>

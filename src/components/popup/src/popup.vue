@@ -13,8 +13,13 @@
 </template>
 
 <script type="es6">
+    import Overlay from '../../overlay/src/overlay.vue';
+
     export default {
         name: 'hui-popup',
+        components: {
+            'hui-overlay': Overlay
+        },
         props: {
             show: Boolean,
             mask: {
@@ -37,8 +42,8 @@
         computed: {
             style() {
                 return {
-                    width: getCSSSize(this.width),
-                    height: getCSSSize(this.getHeight)
+                    width: this.getCSSSize(this.width),
+                    height: this.getCSSSize(this.getHeight)
                 }
             },
             getHeight() {

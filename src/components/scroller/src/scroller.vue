@@ -1,7 +1,7 @@
 <template>
     <div class="root" ref="vueScroll" @touchstart="onTouchStart($event)" @touchmove="onTouchMove($event)" @touchend="onTouchEnd($event)" @scroll="isScroll($event)">
         <div class="div-scroll-inner" :style="transform ? { transform:'translate3d(0,'+top+'px,0)'} : ''" ref="scrollInner">
-            <div class="div-refresh" v-if="onRefresh && !isLoading && (moving || state!=0)" :style="{'height':offsetH+'px','line-height':offsetH+'px'}">
+            <div class="div-refresh" v-if="onRefresh && !isLoading && (moving || state!=0)">
                 <slot name='refresh'>
                     <div :class="{'div-down':state===0,'div-up':state===1,'div-refreshing':state===2 }"></div>
                     <span v-if="state===0">下拉刷新</span>
@@ -11,7 +11,7 @@
             </div>
             <slot></slot>
             <!-- && isLoading -->
-            <div class="div-loading" v-if="isLoading && !loadDisabled && onLoad " :style="{'height':bottomH+'px','line-height':bottomH+'px'}">
+            <div class="div-loading" v-if="isLoading && !loadDisabled && onLoad ">
                 <img src="../../../images/ic-loading.png">
                 <span>加载中...</span>
             </div>
