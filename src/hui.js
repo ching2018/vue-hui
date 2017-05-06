@@ -4,6 +4,7 @@ import Directive from './utils/directive';
 
 import { Alert } from './components/alert';
 import { Button, ButtonGroup } from './components/button';
+import { Card } from './components/card';
 import { CellItem, CellGroup } from './components/cell';
 import { CitySelect } from './components/cityselect';
 import { Confirm } from './components/confirm';
@@ -21,6 +22,7 @@ import { Swiper, SwiperSlide } from './components/swiper';
 import { Switch } from './components/switch';
 import { TextArea } from './components/textarea';
 import { Toast } from './components/toast';
+import { Upload } from './components/upload';
 
 // 全局组件
 import installAlert from './components/alert/install';
@@ -41,6 +43,7 @@ const install = function(Vue) {
 
     Vue.component(Button.name, Button);
     Vue.component(ButtonGroup.name, ButtonGroup);
+    Vue.component(Card.name, Card);
     Vue.component(CellGroup.name, CellGroup);
     Vue.component(CellItem.name, CellItem);
     Vue.component(CitySelect.name, CitySelect);
@@ -59,6 +62,7 @@ const install = function(Vue) {
     Vue.component(SwiperSlide.name, SwiperSlide);
     Vue.component(Switch.name, Switch);
     Vue.component(TextArea.name, TextArea);
+    Vue.component(Upload.name, Upload);
 
     // global components
     var configs = {

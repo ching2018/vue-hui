@@ -5,6 +5,7 @@ module.exports = merge(distCommonWebpackConfig, {
     entry: {
         "/lib.px/alert/index": "./src/components/alert/index.js", //提示弹窗
         "/lib.px/button/index": "./src/components/button/index.js", //按钮
+        "/lib.px/card/index": "./src/components/card/index.js", //卡片
         "/lib.px/cell/index": "./src/components/cell/index.js", //表单
         "/lib.px/cityselect/index": "./src/components/cityselect/index.js", //省市县级联
         "/lib.px/confirm/index": "./src/components/confirm/index.js", //确认弹窗
@@ -23,6 +24,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/switch/index": "./src/components/switch/index.js", //开关
         "/lib.px/textarea/index": "./src/components/textarea/index.js", //多行文本框
         "/lib.px/toast/index": "./src/components/toast/index.js", //提示窗
+        "/lib.px/upload/index": "./src/components/upload/index.js", //上传
     },
     module: {
         loaders: [{

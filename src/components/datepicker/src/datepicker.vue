@@ -76,7 +76,7 @@ function _interopRequireDefault(obj) {
 }
 
 exports.default = {
-    name: 'hui-date-picker',
+    name: 'hui-datepicker',
     props: {
         required: false,
         date: {

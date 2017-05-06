@@ -1,11 +1,11 @@
 <template>
-    <div class="vmc-popup-wrapper">
-        <transition name="vmc-popup-fade">
+    <div class="hui-popup-wrapper">
+        <transition name="hui-popup-fade">
             <hui-overlay @on-click="_onMaskClick" v-if="showMask" v-show="localShow"></hui-overlay>
         </transition>
 
-        <transition :name="'vmc-popup-' + position">
-            <div v-show="localShow" class="vmc-popup" :class="'vmc-popup-' + position" :style="style">
+        <transition :name="'hui-popup-' + position">
+            <div v-show="localShow" class="hui-popup" :class="'hui-popup-' + position" :style="style">
                 <slot></slot>
             </div>
         </transition>

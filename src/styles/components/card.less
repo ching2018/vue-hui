@@ -1,0 +1,72 @@
+.vmc-card {
+    background: #fff;
+    overflow-y: hidden;
+    transform: translateZ(0);
+    transition-property: height;
+    transition-duration: .3s;
+    transition-timing-function: cubic-bezier(0, 1, .5, 1)
+}
+
+.vmc-card+.vmc-card {
+    margin-top: 15px
+}
+
+.vmc-card .no-border:after, .vmc-card .no-border:before {
+    border: none
+}
+
+.vmc-card.with-shadow {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .3)
+}
+
+.vmc-card>:first-child:after, .vmc-card>:first-child:before {
+    border: none
+}
+
+.vmc-card.collapse .card-header:after, .vmc-card.expand .card-header:after {
+    content: " ";
+    display: block;
+    height: 8px;
+    width: 8px;
+    border-width: 1px 1px 0 0;
+    border-color: #c8c8cd;
+    border-style: solid;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transition: transform .3s linear;
+    transform-origin: center center
+}
+
+.vmc-card.collapse .card-header:after {
+    transform: rotate(-45deg);
+    margin-top: -3px
+}
+
+.vmc-card.expand .card-header:after {
+    transform: rotate(135deg);
+    margin-top: -8px
+}
+
+.vmc-card .card-header {
+    height: 45px;
+    line-height: 45px;
+    font-size: 16px;
+    padding: 0 12px;
+    position: relative
+}
+
+.vmc-card .card-content {
+    font-size: 15px;
+    padding: 10px 12px
+}
+
+.vmc-card .card-footer {
+    color: #5f646e;
+    height: 40px;
+    line-height: 40px;
+    font-size: 13px;
+    padding: 0 12px;
+    display: flex;
+    justify-content: space-between
+}
