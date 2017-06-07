@@ -59,6 +59,7 @@
           }
           setClassName ? self.$nextTick(mountInstance) : mountInstance()
         }
+        self.$emit('swiper', self.swiper);
       }
       this.options.notNextTick ? mount() : this.$nextTick(mount)
     },

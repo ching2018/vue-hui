@@ -76,7 +76,7 @@ export default {
     methods: {
         onTouchStart(e) {
             this.startY = e.touches[0].pageY
-            this.moving = false
+            this.moving = false;
         },
 
         onTouchMove(e) {

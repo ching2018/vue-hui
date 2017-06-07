@@ -1,7 +1,6 @@
 <template>
     <label class="cell-item" v-if="type == 'label' || type == 'checkbox' || type == 'radio'">
         <span class="cell-left" v-if="checkLeft">
-            <span class="cell-icon"><slot name="icon"></slot></span>
             <slot name="left"></slot>
         </span>
         <label class="cell-right" :class="classes">
@@ -12,7 +11,6 @@
     </label>
     <router-link class="cell-item" :to="href" v-else-if="type == 'link'">
         <div class="cell-left" v-if="checkLeft">
-            <span class="cell-icon"><slot name="icon"></slot></span>
             <slot name="left"></slot>
         </div>
         <div class="cell-right" :class="classes">
@@ -21,7 +19,6 @@
     </router-link>
     <a class="cell-item" :href="href" v-else-if="type == 'a'">
         <div class="cell-left" v-if="checkLeft">
-            <span class="cell-icon"><slot name="icon"></slot></span>
             <slot name="left"></slot>
         </div>
         <div class="cell-right" :class="classes">
@@ -30,7 +27,6 @@
     </a>
     <div class="cell-item" v-else>
         <div class="cell-left" v-if="checkLeft">
-            <span class="cell-icon"><slot name="icon"></slot></span>
             <slot name="left"></slot>
         </div>
         <div class="cell-right" :class="classes">

@@ -3,18 +3,22 @@
         <div name="header">{{title}}</div>
         <div name="content">
             <div class="image-list">
-                <div class="image" v-for="(image, $index) in _images">
+                <div class="image" v-if="multiple == true" v-for="(image, $index) in uploadImages">
                     <img :src="image">
                     <span class="vmc-badge" @click="_sliceImages($index)">x</span>
                 </div>
-                <div class="vmc-upload" v-if="!input" @click="_upload">
+                <div class="image" v-if="(multiple == false) && !empty(uploadImages)">
+                    <img :src="uploadImages">
+                    <span class="vmc-badge" @click="_sliceImages">x</span>
+                </div>
+                <div class="vmc-upload" v-if="!input" v-show="(multiple == false && empty(uploadImages)) || multiple" @click="_upload">
                     <slot>
                         <div class="vmc-upload-button">
                             <i class="icono-plus"></i>
                         </div>
                     </slot>
                 </div>
-                <div class="vmc-upload" v-if="input">
+                <div class="vmc-upload" v-if="input" v-show="(multiple == false && empty(uploadImages)) || multiple">
                     <slot>
                         <div class="vmc-upload-button">
                             <i class="icono-plus"></i>
@@ -28,7 +32,7 @@
 </template>
 <script>
 import Card from '../../card/src/card.vue';
-
+import is from 'is'
 export default {
     name: 'hui-upload',
     extends: Card,
@@ -42,9 +46,8 @@ export default {
                 console.log('未传入函数');
             }
         },
-        images: Array,
-        url: {
-            type: String
+        images: {
+            default: []
         },
         name: {
             type: String
@@ -57,8 +60,10 @@ export default {
             type: Object,
             default: () => {}
         },
-        multiple: Boolean,
-        autoReset: Boolean,
+        multiple: {
+            type: Boolean,
+            default: false
+        },
         validator: Function,
         input: {
             type: Boolean,
@@ -67,16 +72,28 @@ export default {
     },
     data() {
         return {
-            _images: this.images
+            uploadImages: this.images
+        }
+    },
+    watch: {
+        images(val) {
+            this.uploadImages = val;
         }
     },
     methods: {
+        empty(data){
+            return is.empty(data);
+        },
         _upload() {
             this.upload();
         },
         _sliceImages(index) {
-            _images.splice(index, 1);
-            this.$emit('on-slice', _images, e);
+            if (this.multiple) {
+                this.uploadImages.splice(index, 1);
+            } else {
+                this.uploadImages = '';
+            }
+            this.$emit('on-slice', this.uploadImages);
         },
         _onChange() {
             var files = this.$el.querySelector('input[type=file]').files;
@@ -85,56 +102,22 @@ export default {
             this._uploadFile(files);
         },
         _uploadFile(files) {
-            var fd = new FormData();
+            var _self = this;
 
-            for (let name in this.body) {
-                if (!this.body.hasOwnProperty(name)) continue;
-
-                let value = this.body[name];
-                fd.append(name, value);
-            }
-
-            var filename = this.name;
-            for (let i = 0, len = files.length; i < len; i++) {
-                let file = files[i];
-
-                if (typeof this.validator === 'function') {
-                    var allow = this.validator(file.name, file.type, file.size);
-                    if (!allow) return;
+            Promise.resolve().then(function() {
+                for (let i = 0, len = files.length; i < len; i++) {
+                    let file = files[i];
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(e) {
+                        _self.upload(e.target.result);
+                    }
                 }
-
-                fd.append(filename, files[i]);
-            }
-
-            var xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener('progress', this._onProgress, false);
-            xhr.addEventListener('load', this._onSuccess, false);
-            xhr.addEventListener('error', this._onError, false);
-            xhr.open('POST', this.url);
-            xhr.send(fd);
-        },
-        _onProgress(e) {
-            if (e.lengthComputable) {
-                var percentCompleted = Math.round(e.loaded * 100 / e.total);
-                percentCompleted = percentCompleted.toString() + '%';
-
-                this.$emit('on-progress', percentCompleted);
-            }
-        },
-        _onSuccess(e) {
-            var res = e.target.responseText;
-            try {
-                res = JSON.parse(res)
-            } catch (e) {}
-
-            if (this.autoReset) {
-                this._clearInputFile();
-            }
-            _images.push(res);
-            this.$emit('on-success', res, e);
-        },
-        _onError(e) {
-            this.$emit('on-error', e);
+            }).then(function() {
+                _self._clearInputFile();
+            }).catch(function(err) {
+                console(err);
+            });
         },
         _clearInputFile() {
             var fileInput = this.$el.querySelector('input[type=file]');

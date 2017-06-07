@@ -67,7 +67,8 @@
         "rimraf": "^2.4.3",
         "moment": "^2.18.1",
         "url-loader": "^0.5.8",
-        "swiper": "^3.4.2"
+        "swiper": "^3.4.2",
+        "is": "^3.2.1"
     },
     "license": "MIT"
 }
