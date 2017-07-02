@@ -1,158 +1,210 @@
 <template>
-    <div class="root" ref="vueScroll" @touchstart="onTouchStart($event)" @touchmove="onTouchMove($event)" @touchend="onTouchEnd($event)" @scroll="isScroll($event)">
-        <div class="div-scroll-inner" :style="transform ? { transform:'translate3d(0,'+top+'px,0)'} : ''" ref="scrollInner">
-            <div class="div-refresh" v-if="onRefresh && !isLoading && (moving || state!=0)">
-                <slot name='refresh'>
-                    <div :class="{'div-down':state===0,'div-up':state===1,'div-refreshing':state===2 }"></div>
-                    <span v-if="state===0">下拉刷新</span>
-                    <span v-if="state===1">释放刷新</span>
-                    <span v-if="state===2">正在刷新……</span>
-                </slot>
-            </div>
-            <slot></slot>
-            <!-- && isLoading -->
-            <div class="div-loading" v-if="isLoading && !loadDisabled && onLoad ">
-                <img src="../../../images/ic-loading.png">
-                <span>加载中...</span>
-            </div>
-            <div class="no-data-text" :class="{'active': !isLoading && loadingState == 2}" v-text="noDataText">
-            </div>
+    <div class="vmc-dropload" ref="vueScroll" @scroll="_onScroll" v-touch-events>
+        <div class="dropload-up" :class="{'animate-disappear': animateUp}" :style="{height: offsetHeight + 'px'}" v-if="refresh">
+            <div class="dropload-refresh" v-show="pullStatus == PULLSTATUS.UPINDENT">{{options.tips.upPull}}</div>
+            <div class="dropload-update" v-show="pullStatus == PULLSTATUS.UPREADY">{{options.tips.upRelease}}</div>
+            <div class="dropload-load" v-show="pullStatus == PULLSTATUS.UPLOADING"><span class="loading"></span> {{options.tips.upLoading}}</div>
         </div>
+
+        <slot></slot>
+
+        <div class="dropload-down" v-if="loadMore">
+            <div class="dropload-refresh" v-show="pullStatus == PULLSTATUS.DOWNINDENT">{{options.tips.downPull}}</div>
+            <div class="dropload-load" v-show="pullStatus == PULLSTATUS.DOWNLOADING"><span class="loading"></span> {{options.tips.downLoading}}</div>
+            <div class="dropload-noData" v-show="pullStatus == PULLSTATUS.NOMORE">{{options.tips.downEnd}}</div>
+        </div>
+
+        <div class="dropload-mask" v-show="loading && useMask" v-stop></div>
     </div>
 </template>
-<script>
-export default {
-    name: 'hui-scroller',
-    props: {
-        // 下拉刷新函数
-        onRefresh: {
-            type: Function,
-            default: undefined
-        },
-        // 下拉加载中的高度
-        offsetH: {
-            type: Number,
-            default: 20
-        },
-        // 底部加载
-        onLoad: {
-            type: Function,
-            default: undefined
-        },
-        loadDisabled: {
-            type: Boolean,
-            default: true
-        },
-        // 底部加载中高度
-        bottomH: {
-            type: Number,
-            default: 20
-        },
-        noDataText: {
-            default: '没有更多数据了'
-        },
-        onScroll: {
-            type: Function,
-            default: undefined
-        },
-    },
-    data() {
-        return {
-            top: 0,
-            // 初始位置
-            startY: 0,
-            // 状态变化：
-            // 0: 下拉刷新 => 初始状态
-            // 1: 释放加载
-            // 2: 下拉刷新中
-            state: 0,
-            loadingState: 0, // 0: stop, 1: loading, 2: stopping loading
-            isLoading: false,
-            // 移动进行中
-            moving: false,
-            transform: true
-        }
-    },
-    methods: {
-        onTouchStart(e) {
-            this.startY = e.touches[0].pageY
-            this.moving = false;
-        },
-
-        onTouchMove(e) {
-            this.isLoading = false
-            if (!this.onRefresh) {
-                return
-            }
-            let diff = e.touches[0].pageY - this.startY
-            if (diff < 0 || this.$el.scrollTop > 0) {
-                return
-            }
-            this.moving = true
-            e.preventDefault()
-            this.top = Math.pow(diff, 0.8) + (this.state === 2 ? this.offsetH : 0)
-            if (this.state === 2) {
-                return
-            }
-            if (this.top >= this.offsetH) {
-                this.state = 1
-            } else {
-                this.state = 0
-            }
-        },
-
-        onTouchEnd(e) {
-            this.moving = false
-            if (this.state === 2) {
-                this.top = this.offsetH
-                return
-            }
-
-            // 判断下拉刷新
-            if (this.top > this.offsetH) {
-                this.state = 2
-                this.top = this.offsetH
-                this.onRefresh(() => {
-                    this.state = 0
-                    this.top = 0
-                })
-                return
-            }
-
-            this.state = 0
-            this.top = 0
-        },
-
-        // 上拉加载
-        isScroll(e) {
-            if (typeof this.onScroll === "function") {
-                this.onScroll(this.$refs.vueScroll.clientHeight, this.$el.scrollTop);
-            }
-            if (this.$el.scrollTop > 0) {
-                this.transform = false;
-            } else {
-                this.transform = true;
-            }
-            if (!this.onLoad || this.loadDisabled) {
-                return
-            }
-            let outerHeight = this.$refs.vueScroll.clientHeight
-            let innerHeight = this.$refs.scrollInner.clientHeight
-            if (innerHeight - outerHeight - this.bottomH <= this.$el.scrollTop) {
-                if (this.loadingState) return
-                this.loadingState = 1
-                this.isLoading = true
-                this.onLoad(setTimeout(() => {
-                    this.loadingState = this.loadDisabled ? 2 : 0
-                    this.isLoading = false
-                    console.log(this.loadingState)
-                }, 1000))
-            }
-            return
-        }
-    }
-}
-</script>
 <style lang="less">
     @import "../../../styles/components/scroller.less";
 </style>
+<script type="es6">
+    const PULLSTATUS = {
+        INITIAL: 0,
+        UPINDENT: 1,
+        UPREADY: 2,
+        UPLOADING: 3,
+        DOWNINDENT: -1,
+        DOWNLOADING: -3,
+        NOMORE: -9
+    };
+
+    export default {
+        name: 'hui-scroller',
+        props: {
+            // 自动加载
+            autoLoad: Boolean,
+            // 上方距离
+            distance: {
+                type: Number,
+                default: 50
+            },
+            // 下方距离
+            threshold: {
+                type: Number,
+                default: 20
+            },
+            //滚动方法
+            onScroll:Function,
+            // 刷新方法
+            refresh: Function,
+            // 加载方法
+            loadMore: Function,
+            // 是否更多
+            hasMore: Boolean,
+            // 是否遮挡
+            useMask: Boolean,
+            // 其它配置
+            options: {
+                type: Object,
+                default() {
+                    return {
+                        tips: {
+                            upPull: '↓ 继续下拉刷新',
+                            upRelease: '↑ 释放更新列表',
+                            upLoading: '正在刷新...',
+                            downPull: '↑上拉加载更多',
+                            downLoading: '正在加载下一页数据...',
+                            downEnd: '没有更多数据了'
+                        }
+                    }
+                }
+            }
+        },
+        data() {
+            return {
+                PULLSTATUS,
+                pullStatus: 0,
+                offsetHeight: 0,
+                animateUp: false,
+                loading: false,
+            }
+        },
+        methods: {
+            done(error) {
+                if (this._direction = 'down') {
+                    this.offsetHeight = 0;
+                }
+
+                this.loading = false;
+                this.pullStatus = PULLSTATUS.INITIAL;
+
+                var that = this;
+                setTimeout(() => {
+                    if (!that.$el) return;
+
+                    that._scrollHeight = that.$el.scrollHeight;
+                    that._offsetHeight = that.$el.offsetHeight;
+
+                    var domDown = that.$el.querySelector('.dropload-down');
+                    if (domDown.offsetTop < that._offsetHeight) {
+                        if (that.hasMore && that.loadMore && !error) {
+                            that._direction = 'up';
+                            that.loading = true;
+                            that.pullStatus = PULLSTATUS.DOWNLOADING;
+                            that.loadMore();
+                        }
+                    }
+                }, 500);
+            },
+            _onTouchStart(pos) {
+                if (this.loading) return;
+
+                this.animateUp = false;
+
+                this._touchScrollTop = this.$el.scrollTop;
+            },
+            _onTouchMove(offset, pos, value, e) {
+                if (this.loading) return;
+
+                this._moveY = offset.y;
+
+                if (this._moveY > 0) {
+                    this._direction = 'down';
+                } else {
+                    this._direction = 'up';
+                }
+
+                var absY = Math.abs(this._moveY);
+
+                // 下拉刷新
+                if (this.refresh && this._touchScrollTop <=0 && this._direction === 'down') {
+                    e.preventDefault();
+
+                    if (absY <= this.distance) {
+                        // 开始下拉
+                        this.offsetHeight = absY;
+                        this.pullStatus = PULLSTATUS.UPINDENT;
+                    } else if (absY > this.distance && absY <= this.distance * 2) {
+                        // 指定距离 < 下拉距离 < 指定距离*2
+                        this.offsetHeight = this.distance + (absY - this.distance) * 0.5;
+                        this.pullStatus = PULLSTATUS.UPREADY;
+                    } else {
+                        this.offsetHeight = this.distance + this.distance * 0.5 + (absY - this.distance * 2) * 0.2;
+                    }
+                }
+            },
+            _onTouchEnd() {
+                if (this.loading) return;
+
+                var absY = Math.abs(this._moveY);
+
+                if (this.refresh && this._touchScrollTop <=0 && this._direction === 'down') {
+                    this.animateUp = true;
+
+                    if (absY > this.distance) {
+                        this.offsetHeight = 50;
+                        this.pullStatus = PULLSTATUS.UPLOADING;
+                        this.loading = true;
+                        this.refresh();
+                    } else {
+                        this.offsetHeight = 0;
+                    }
+
+                    this._moveY = 0;
+                }
+            },
+            _onScroll(e) {
+                if (this.loading) return;
+
+                this._scrollTop = this.$el.scrollTop;
+                this._direction = 'up';
+                
+                if (typeof this.onScroll === "function") {
+                    this.onScroll(this.$el.clientHeight, this.$el.scrollTop);
+                }
+                if (this.loadMore && this._direction === 'up') {
+                    var absY = this.$el.scrollHeight - (this.$el.offsetHeight + this.$el.scrollTop);
+                    if (absY > 50 && this.pullStatus === PULLSTATUS.DOWNINDENT) {
+                        this.pullStatus = PULLSTATUS.INITIAL;
+                    } else if (absY <= 50 && absY > this.threshold && this.hasMore) {
+                        this.pullStatus = PULLSTATUS.DOWNINDENT;
+                    } else if (absY <= this.threshold) {
+                        this.loading = true;
+
+                        if (this.hasMore) {
+                            this.pullStatus = PULLSTATUS.DOWNLOADING;
+                            this.loadMore();
+                        } else {
+                            this.pullStatus = PULLSTATUS.NOMORE;
+                            var that = this;
+                            setTimeout(() => {
+                                that.done();
+                            }, 1000);
+                        }
+                    }
+                }
+            }
+        },
+        mounted() {
+            if (this.autoLoad && this.refresh) {
+                this.animateUp = true;
+                this.offsetHeight = 50;
+                this.pullStatus = PULLSTATUS.UPLOADING;
+                this.refresh();
+            }
+        }
+    }
+</script>
