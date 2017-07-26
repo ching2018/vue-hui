@@ -34,7 +34,7 @@
     import {addClass, removeClass, getScrollview, isIOS} from '../../../utils/assist';
 
     export default {
-        name: 'hui-city-select',
+        name: 'hui-cityselect',
         data() {
             return {
                 show: this.value,
