@@ -99,12 +99,14 @@
                     that._offsetHeight = that.$el.offsetHeight;
 
                     var domDown = that.$el.querySelector('.dropload-down');
-                    if (domDown.offsetTop < that._offsetHeight) {
-                        if (that.hasMore && that.loadMore && !error) {
-                            that._direction = 'up';
-                            that.loading = true;
-                            that.pullStatus = PULLSTATUS.DOWNLOADING;
-                            that.loadMore();
+                    if(domDown){
+                        if (domDown.offsetTop < that._offsetHeight) {
+                            if (that.hasMore && that.loadMore && !error) {
+                                that._direction = 'up';
+                                that.loading = true;
+                                that.pullStatus = PULLSTATUS.DOWNLOADING;
+                                that.loadMore();
+                            }
                         }
                     }
                 }, 500);
@@ -167,14 +169,14 @@
                 }
             },
             _onScroll(e) {
+                if (typeof this.onScroll === "function") {
+                    this.onScroll(this.$el.clientHeight, this.$el.scrollTop);
+                }
                 if (this.loading) return;
 
                 this._scrollTop = this.$el.scrollTop;
                 this._direction = 'up';
-                
-                if (typeof this.onScroll === "function") {
-                    this.onScroll(this.$el.clientHeight, this.$el.scrollTop);
-                }
+
                 if (this.loadMore && this._direction === 'up') {
                     var absY = this.$el.scrollHeight - (this.$el.offsetHeight + this.$el.scrollTop);
                     if (absY > 50 && this.pullStatus === PULLSTATUS.DOWNINDENT) {

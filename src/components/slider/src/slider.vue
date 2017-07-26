@@ -8,7 +8,8 @@
             <slot></slot>
             <div class="slider-item" :style="itemHeight" v-html="firtstItem"></div>
         </div>
-        <div class="slider-pagination" :class="direction == 'vertical' ? 'slider-pagination-vertical' : ''">
+        <div class="slider-pagination" v-if="itemsArr.length > 1"
+             :class="direction == 'vertical' ? 'slider-pagination-vertical' : ''">
             <span class="slider-pagination-item"
                   v-for="(t, i) in itemNums"
                   :class="paginationIndex == i ? 'slider-pagination-item-active': ''"
@@ -41,7 +42,8 @@
                     moveOffset: 0,
                     touchStartTime: 0,
                     isTouchEvent: false,
-                    allowClick: false
+                    allowClick: false,
+                    isDraging: false
                 }
             }
         },
@@ -100,6 +102,8 @@
                 this.autoPlay();
             },
             cloneItem() {
+                if (this.itemsArr.length <= 1) return;
+
                 const itemArr = this.itemsArr;
 
                 this.firtstItem = itemArr[0].$el.innerHTML;
@@ -137,7 +141,7 @@
                 }
             },
             touchMoveHandler(event) {
-                if(!this.supportTouch || this.isVertical) {
+                if (!this.supportTouch || this.isVertical) {
                     event.preventDefault();
                 }
 
@@ -159,6 +163,8 @@
                     return;
                 }
 
+                touches.isDraging = true;
+
                 const deltaSlide = touches.moveOffset = this.isVertical ? (currentY - touches.startY) : (currentX - touches.startX);
 
                 if (deltaSlide != 0 && touches.moveTag != 0) {
@@ -177,20 +183,21 @@
                 const moveOffset = touches.moveOffset;
                 const warpperSize = this.isVertical ? this.$el.clientHeight : this.$refs.warpper.offsetWidth;
 
-                setTimeout(() => {
-                    touches.allowClick = true;
-                }, 0);
-
                 if (touches.moveTag == 1) {
                     touches.moveTag = 0;
                 }
+
+                setTimeout(() => {
+                    touches.allowClick = true;
+                    touches.isDraging = false;
+                }, this.speed);
 
                 if (touches.moveTag == 2) {
                     touches.moveTag = 0;
 
                     const timeDiff = Date.now() - touches.touchStartTime;
 
-                    if (timeDiff > 300 && Math.abs(moveOffset) <= warpperSize * .5) {
+                    if (timeDiff > 300 && Math.abs(moveOffset) <= warpperSize * .5 || this.itemsArr.length <= 1) {
                         this.setTranslate(this.speed, -this.index * warpperSize);
                     } else {
                         this.setTranslate(this.speed, -((moveOffset > 0 ? --this.index : ++this.index) * warpperSize));
@@ -205,7 +212,7 @@
                 }
             },
             autoPlay() {
-                if (this.autoplay <= 0) return;
+                if (this.autoplay <= 0 || this.itemsArr.length <= 1) return;
 
                 this.autoPlayTimer = setInterval(() => {
                     const size = this.isVertical ? this.$el.clientHeight : this.$refs.warpper.offsetWidth;
@@ -225,6 +232,9 @@
             stopAutoplay() {
                 clearInterval(this.autoPlayTimer);
             },
+            stopDrag(event) {
+                this.touches.isDraging && event.preventDefault();
+            },
             bindEvents() {
                 const _events = this.touchEvents();
 
@@ -239,6 +249,8 @@
                 });
 
                 window.addEventListener('resize', this.resizeSlides);
+
+                document.body.addEventListener('touchmove', this.stopDrag);
             },
             unbindEvents() {
                 const _events = this.touchEvents();
@@ -248,6 +260,8 @@
                 this.$el.removeEventListener(_events.end, this.touchEndHandler);
 
                 window.removeEventListener('resize', this.resizeSlides);
+
+                document.body.removeEventListener('touchmove', this.stopDrag);
             },
             touchEvents() {
                 const supportTouch = this.supportTouch = (window.Modernizr && !!window.Modernizr.touch) || (function () {

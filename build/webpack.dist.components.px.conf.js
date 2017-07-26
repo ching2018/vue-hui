@@ -7,10 +7,12 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/button/index": "./src/components/button/index.js", //按钮
         "/lib.px/card/index": "./src/components/card/index.js", //卡片
         "/lib.px/cell/index": "./src/components/cell/index.js", //表单
+        "/lib.px/checkbox/index": "./src/components/checkbox/index.js",//多选
         "/lib.px/cityselect/index": "./src/components/cityselect/index.js", //省市县级联
         "/lib.px/confirm/index": "./src/components/confirm/index.js", //确认弹窗
         "/lib.px/countdown/index": "./src/components/countdown/index.js", //时间倒计时
         "/lib.px/datepicker/index": "./src/components/datepicker/index.js", //时间选择器
+        "/lib.px/datetime/index": "./src/components/datetime/index.js", //时间选择器
         "/lib.px/flexbox/index": "./src/components/flexbox/index.js", //布局
         "/lib.px/input/index": "./src/components/input/index.js", //输入框
         "/lib.px/overlay/index": "./src/components/overlay/index.js", //遮罩层
