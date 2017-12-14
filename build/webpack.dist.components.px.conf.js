@@ -18,6 +18,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/datetime/index": "./src/components/datetime/index.js", //时间选择器
         "/lib.px/flexbox/index": "./src/components/flexbox/index.js", //布局
         "/lib.px/grids/index": "./src/components/grids/index.js", //网格
+        "/lib.px/infinitescroll/index": "./src/components/infinitescroll/index.js", //滚动加载
         "/lib.px/input/index": "./src/components/input/index.js", //输入框
         "/lib.px/keyboard/index": "./src/components/keyboard/index.js", //安全键盘
         "/lib.px/lightbox/index": "./src/components/lightbox/index.js", //图片预览
@@ -26,6 +27,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/overlay/index": "./src/components/overlay/index.js", //遮罩层
         "/lib.px/popup/index": "./src/components/popup/index.js", //弹层
         "/lib.px/prompt/index": "./src/components/prompt/index.js", //对话框
+        "/lib.px/pullrefresh/index": "./src/components/pullrefresh/index.js", //下拉刷新
         "/lib.px/radio/index": "./src/components/radio/index.js", //单选框
         "/lib.px/rater/index": "./src/components/rater/index.js", //评分
         "/lib.px/scroller/index": "./src/components/scroller/index.js", //上拉加载与下拉刷新

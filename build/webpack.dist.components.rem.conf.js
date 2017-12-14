@@ -17,6 +17,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.rem/datetime/index": "./src/components/datetime/index.js", //时间选择器
         "/lib.rem/flexbox/index": "./src/components/flexbox/index.js", //布局
         "/lib.rem/grids/index": "./src/components/grids/index.js", //网格
+        "/lib.rem/infinitescroll/index": "./src/components/infinitescroll/index.js", //滚动加载
         "/lib.rem/input/index": "./src/components/input/index.js", //输入框
         "/lib.rem/keyboard/index": "./src/components/keyboard/index.js", //安全键盘
         "/lib.rem/lightbox/index": "./src/components/lightbox/index.js", //图片预览
@@ -25,6 +26,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.rem/overlay/index": "./src/components/overlay/index.js", //遮罩层
         "/lib.rem/popup/index": "./src/components/popup/index.js", //弹层
         "/lib.rem/prompt/index": "./src/components/prompt/index.js", //对话框
+        "/lib.px/pullrefresh/index": "./src/components/pullrefresh/index.js", //下拉刷新
         "/lib.rem/radio/index": "./src/components/radio/index.js", //单选框
         "/lib.rem/rater/index": "./src/components/rater/index.js", //评分
         "/lib.rem/scroller/index": "./src/components/scroller/index.js", //上拉加载与下拉刷新
