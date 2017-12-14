@@ -1,5 +1,5 @@
 <template>
-    <div class="m-flexbox" :class="direction == 'vertical' ? 'flexbox-vertical' : 'flexbox-horizontal'">
+    <div class="hui-flexbox" :class="direction == 'vertical' ? 'hui-flexbox-vertical' : 'hui-flexbox-horizontal'">
         <slot></slot>
     </div>
 </template>

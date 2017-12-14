@@ -1,12 +1,13 @@
 <template>
-    <hui-button :size="size"
-               :type="type"
-               :disabled="start"
-               :class="start ? 'btn-disabled' : ''"
-               :style="{backgroundColor: bgcolor, color: color}"
-    >
-        {{tmpStr}}
-    </hui-button>
+    <hui-sendcode-button
+            :size="size"
+            :type="type"
+            :action-type="actionType"
+            :disabled="start"
+            :class="start ? 'btn-disabled' : ''"
+            :style="{backgroundColor: bgcolor, color: color}"
+    >{{tmpStr}}
+    </hui-sendcode-button>
 </template>
 
 <script type="text/babel">
@@ -15,11 +16,15 @@
     export default {
         name: 'hui-sendcode',
         extends: Button,
+        components: {
+            'hui-sendcode-button': Button
+        },
         data() {
             return {
                 tmpStr: '获取短信验证码',
                 timer: null,
-                start: false
+                start: false,
+                runSecond: this.second
             }
         },
         props: {
@@ -41,12 +46,24 @@
             value: {
                 type: Boolean,
                 default: false
+            },
+            storageKey: {
+                type: String
             }
         },
         methods: {
-            run() {
-                let second = this.second;
-                this.tmpStr = this.getStr(this.second);
+            run(lastSecond) {
+                let second = lastSecond ? lastSecond : this.runSecond;
+
+                if (this.storageKey) {
+                    const runSecond = new Date().getTime() + second * 1000;
+                    window.sessionStorage.setItem(this.storageKey, runSecond);
+                }
+
+                if (!lastSecond) {
+                    this.tmpStr = this.getStr(second);
+                }
+
                 this.timer = setInterval(() => {
                     second--;
                     this.tmpStr = this.getStr(second);
@@ -55,6 +72,7 @@
             },
             stop() {
                 this.tmpStr = this.resetStr;
+                this.start = false;
                 this.$emit('input', false);
                 clearInterval(this.timer);
             },
@@ -68,11 +86,18 @@
                 val && this.run();
             }
         },
-        mounted() {
-            if (this.initStr) this.tmpStr = this.initStr;
+        created() {
+            const lastSecond = ~~((window.sessionStorage.getItem(this.storageKey) - new Date().getTime()) / 1000);
+            if (lastSecond > 0 && this.storageKey) {
+                this.tmpStr = this.getStr(lastSecond);
+                this.start = true;
+                this.run(lastSecond);
+            } else {
+                if (this.initStr) this.tmpStr = this.initStr;
+            }
         },
         destroyed() {
-            this.stop();
+            !this.storageKey && this.stop();
         }
     }
 </script>

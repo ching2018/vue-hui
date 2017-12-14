@@ -3,9 +3,9 @@
         <div name="header">{{title}}</div>
         <div name="content">
             <div class="image-list">
-                <div class="image" v-if="multiple == true" v-for="(image, $index) in uploadImages">
+                <div class="image" v-if="multiple == true" v-for="(image, index) in uploadImages">
                     <img :src="image">
-                    <span class="vmc-badge" @click="_sliceImages($index)">x</span>
+                    <span class="vmc-badge" @click="_sliceImages(index)">x</span>
                 </div>
                 <div class="image" v-if="(multiple == false) && !empty(uploadImages)">
                     <img :src="uploadImages">

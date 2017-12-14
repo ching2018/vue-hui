@@ -1,5 +1,5 @@
 <template>
-    <div class="m-button"><slot></slot></div>
+    <div class="hui-button"><slot></slot></div>
 </template>
 
 <script type="text/babel">

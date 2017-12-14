@@ -6,14 +6,25 @@ const pageScroll = (function () {
     let islock = false;
 
     return {
-        lock: function () {
-            if (islock)return;
+        lock(el) {
+            if (islock) return;
             islock = true;
-            document.addEventListener('touchmove', fn);
+            (el || document).addEventListener('touchmove', fn);
         },
-        unlock: function () {
+        unlock(el) {
             islock = false;
-            document.removeEventListener('touchmove', fn);
+            (el || document).removeEventListener('touchmove', fn);
+        }
+    };
+})();
+
+const preventScroll = (function () {
+    return {
+        lock(el) {
+            isIOS && addClass(el || document.body, 'g-fix-ios-prevent-scroll');
+        },
+        unlock(el) {
+            isIOS && removeClass(el || document.body, 'g-fix-ios-prevent-scroll');
         }
     };
 })();
@@ -41,7 +52,7 @@ const getScrollview = function (el) {
 };
 
 const checkInview = function (scrollView, el) {
-    const contentHeight = scrollView == window ? document.body.offsetHeight : scrollView.offsetHeight;
+    const contentHeight = scrollView === window ? document.body.offsetHeight : scrollView.offsetHeight;
     const contentTop = scrollView === window ? 0 : scrollView.getBoundingClientRect().top;
 
     const post = el.getBoundingClientRect().top - contentTop;
@@ -52,13 +63,13 @@ const checkInview = function (scrollView, el) {
 
 const hasClass = function (elem, cls) {
     cls = cls || '';
-    if (cls.replace(/\s/g, '').length == 0) return false;
+    if (cls.replace(/\s/g, '').length === 0 || !elem) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
 };
 
 const addClass = function (ele, cls) {
     if (!hasClass(ele, cls)) {
-        ele.className = ele.className == '' ? cls : ele.className + ' ' + cls;
+        ele.className = ele.className === '' ? cls : ele.className + ' ' + cls;
     }
 };
 
@@ -106,4 +117,4 @@ const scrollTop = function (el, from = 0, to, duration = 500) {
     scroll(from, to, step);
 };
 
-export {pageScroll, isIOS, isColor, getScrollview, checkInview, addClass, removeClass, scrollTop};
+export {pageScroll, preventScroll, isIOS, isColor, getScrollview, checkInview, addClass, removeClass, scrollTop};

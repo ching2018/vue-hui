@@ -1,5 +1,5 @@
 <template>
-    <button :disabled="disabled" :class="classes" :style="{backgroundColor: bgcolor, color: color}">
+    <button :disabled="disabled" :class="classes" :style="{backgroundColor: bgcolor, color: color}" :type="actionType">
         <slot></slot>
     </button>
 </template>
@@ -11,6 +11,12 @@
         name: 'hui-button',
         props: {
             disabled: Boolean,
+            actionType: {
+                validator(value) {
+                    return ['button', 'submit', 'reset'].indexOf(value) > -1;
+                },
+                default: 'button'
+            },
             type: {
                 validator(value) {
                     return ['primary', 'danger', 'warning', 'hollow', 'disabled'].indexOf(value) > -1;
@@ -33,20 +39,26 @@
                     if(!value) return true;
                     return isColor(value);
                 }
+            },
+            shape: {
+                validator(value) {
+                    return ['square', 'circle'].indexOf(value) > -1;
+                },
+                default: 'square'
             }
         },
         computed: {
             classes() {
-                let s = this.size == 'large' ? 'btn-block' : 'btn';
-                let b = 'btn-' + this.type;
+                let s = this.size === 'large' ? 'hui-btn-block' : 'hui-btn';
+                let b = 'hui-btn-' + this.type;
                 if (this.disabled) {
-                    b = 'btn-disabled';
+                    b = 'hui-btn-disabled';
                 }
 
                 if (this.bgcolor) {
                     b = '';
                 }
-                return s + ' ' + b;
+                return s + ' ' + b + (this.shape === 'circle' ? ' hui-btn-circle' : '');
             }
         }
     }

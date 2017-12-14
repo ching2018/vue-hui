@@ -1,46 +1,49 @@
 <template>
-    <div class="m-input">
+    <div class="hui-input">
         <template v-if="regex == 'mobile'">
-            <input type="tel" pattern="[0-9]*"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" maxlength="11" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" type="tel" pattern="[0-9]*"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" maxlength="11" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
         </template>
         <template v-else>
             <template v-if="type == 'password'">
-                <input v-if="!showPwd" type="password"
-                       v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+                <input ref="input" v-if="!showPwd" type="password"
+                       v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
                 >
-                <input v-if="showPwd" type="text"
-                       v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+                <input ref="input" v-if="showPwd" type="text"
+                       v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
                 >
             </template>
-            <input v-if="type == 'text'" type="text"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'text'" type="text"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
-            <input v-if="type == 'number'" type="number"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'search'" type="search"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
-            <input v-if="type == 'email'" type="email"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'number'" type="number"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
-            <input v-if="type == 'tel'" type="tel"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'email'" type="email"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
-            <input v-if="type == 'datetime-local'" type="datetime-local"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'tel'" type="tel"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
-            <input v-if="type == 'date'" type="date"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'datetime-local'" type="datetime-local"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
-            <input v-if="type == 'time'" type="time"
-                   v-model="currentValue" :name="name" @focus="showClear = true" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            <input ref="input" v-if="type == 'date'" type="date"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
+            >
+            <input ref="input" v-if="type == 'time'" type="time"
+                   v-model="currentValue" :name="name" @focus="focusHandler" @blur="blurHandler" :maxlength="max" :placeholder="placeholder" :autocomplete="autocomplete" :readonly="readonly" :disabled="disabled"
             >
         </template>
-        <a href="javascript:;" class="input-clear" tabindex="-1" @click="clearInput" v-show="showClearIcon && showClear && !isempty"></a>
-        <span class="input-error" v-if="showErrorIcon" v-show="(!!regex || !!min || !!max || required) && iserror && initError"></span>
-        <span class="input-warn" v-if="showRequiredIcon && showErrorIcon" v-show="(required || (!!min && min > 0)) && isempty && showWarn"></span>
-        <span class="input-success" v-if="showSuccessIcon" v-show="(!!regex || !!min || !!max || required) && !iserror && currentValue != ''"></span>
-        <a href="javascript:;" v-if="type == 'password'" class="input-password" :class="showPwd ? 'input-password-open' : ''" tabindex="-1" @click.stop="showPwd = !showPwd"></a>
+        <a href="javascript:;" class="hui-input-clear" tabindex="-1" @click="clearInput" v-show="showClearIcon && showClear && !isempty"></a>
+        <span class="hui-input-error" v-if="showErrorIcon" v-show="(!!regex || !!min || !!max || required) && iserror && initError"></span>
+        <span class="hui-input-warn" v-if="showRequiredIcon && showErrorIcon" v-show="(required || (!!min && min > 0)) && isempty && showWarn"></span>
+        <span class="hui-input-success" v-if="showSuccessIcon" v-show="(!!regex || !!min || !!max || required) && !iserror && currentValue != ''"></span>
+        <a href="javascript:;" v-if="type == 'password'" class="hui-input-password" :class="showPwd ? 'hui-input-password-open' : ''" tabindex="-1" @click.stop="showPwd = !showPwd"></a>
     </div>
 </template>
 
@@ -99,7 +102,7 @@
             },
             type: {
                 validator (value) {
-                    return ['text', 'password', 'email', 'number', 'tel', 'datetime-local', 'date', 'time'].indexOf(value) > -1;
+                    return ['text', 'password', 'search', 'email', 'number', 'tel', 'datetime-local', 'date', 'time'].indexOf(value) > -1;
                 },
                 default: 'text'
             },
@@ -112,6 +115,12 @@
                 validator(val) {
                     return /^\d*$/.test(val);
                 }
+            },
+            onBlur: {
+                type: Function
+            },
+            onFocus: {
+                type: Function
             }
         },
         watch: {
@@ -136,7 +145,7 @@
 
                 if(showError) this.showWarn = false;
 
-                if(this.required && val == '') {
+                if(this.required && val === '') {
                     this.setError('不能为空', 'NOT_NULL');
                     this.iserror = true;
                     return;
@@ -148,7 +157,7 @@
                     return;
                 }
 
-                const v = this.regex == 'bankcard' ? val.replace(/\s/g, '') : val;
+                const v = this.regex === 'bankcard' ? val.replace(/\s/g, '') : val;
                 const reg = this.regexObj[this.regex] ? this.regexObj[this.regex] : this.trim(this.regex, '/');
                 if (!!v && this.regex && !new RegExp(reg).test(v)) {
                     this.setError('输入字符不符合规则', 'NOT_REGEX_RULE');
@@ -161,21 +170,27 @@
                 this.errorMsg = '';
                 this.errorCode = '';
             },
-            blurHandler() {
+            blurHandler(e) {
                 this.validatorInput(this.currentValue, true);
 
                 setTimeout(() => {
                     this.showClear = false;
                 }, 200);
+
+                this.onBlur && this.onBlur(e);
+            },
+            focusHandler(e) {
+                this.showClear = true;
+                this.onFocus && this.onFocus(e);
             },
             clearInput() {
                 this.currentValue = '';
                 this.emitInput();
             },
             emitInput() {
-                if (this.regex == 'bankcard') {
+                if (this.regex === 'bankcard') {
                     if (/\S{5}/.test(this.currentValue)) {
-                        this.currentValue = this.currentValue.replace(/\s/g, '').replace(/(.{4})/g, "$1 ");
+                        this.currentValue = this.currentValue.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, "$1 ");
                     }
                     this.$emit('input', this.currentValue.replace(/\s/g, ''));
                     return;
@@ -192,6 +207,12 @@
                     return str.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '');
                 }
                 return str;
+            },
+            setFocus() {
+                this.$refs.input.focus();
+            },
+            setBlur() {
+                this.$refs.input.blur();
             }
         },
         mounted() {

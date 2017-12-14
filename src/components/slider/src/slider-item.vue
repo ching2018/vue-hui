@@ -1,5 +1,5 @@
 <template>
-    <div class="slider-item">
+    <div class="hui-slider-item">
         <slot></slot>
     </div>
 </template>
@@ -8,7 +8,7 @@
     export default {
         name: 'hui-slider-item',
         mounted() {
-            this.$parent.init();
+            this.$nextTick(this.$parent.init);
         }
     }
 </script>

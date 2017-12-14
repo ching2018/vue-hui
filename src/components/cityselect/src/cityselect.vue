@@ -1,29 +1,41 @@
 <template>
     <div>
-        <div class="mask-cityselect" v-show="show" @click.stop="close"></div>
-        <div class="m-cityselect" :class="show ? 'cityselect-active' : ''">
-            <div class="cityselect-header">
-                <p class="cityselect-title">{{title}}</p>
-                <div v-show="ready" class="cityselect-nav">
+        <hui-mask v-model="show" @click.native="close" ref="mask"></hui-mask>
+        <div class="hui-cityselect" :class="show ? 'hui-cityselect-active' : ''">
+            <div class="hui-cityselect-header">
+                <p class="hui-cityselect-title" @touchstart.stop.prevent="">{{title}}</p>
+                <div v-show="ready" class="hui-cityselect-nav">
                     <a href="javascript:;"
-                       v-for="index in columnNum"
+                       :key="key"
+                       v-for="index, key in columnNum"
                        v-show="!!nav['txt' + index]"
                        @click.stop="navEvent(index)"
-                       :class="index == navIndex ? 'cityselect-nav-active' : ''"
+                       :class="index == navIndex ? 'hui-cityselect-nav-active' : ''"
                     >{{nav['txt' + index]}}</a>
                 </div>
             </div>
-            <div v-show="!ready" class="cityselect-loading">加载中</div>
-            <ul v-show="ready" class="cityselect-content" :class="activeClasses">
-                <li class="cityselect-item" v-for="index in columnNum" :ref="'itemBox' + index">
-                    <div class="cityselect-item-box">
-                        <a href="javascript:;"
-                           :data="item.v" :data2="active['itemValue' + index]"
-                           v-for="item in columns['columnItems' + index]"
-                           :class="currentClass(item.v, item.n, index)"
-                           @click.stop="itemEvent(index, item.n, item.v, item.c)"
-                        ><span>{{item.n}}</span></a>
-                    </div>
+            <div v-if="!ready" class="hui-cityselect-loading">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                    <path stroke="none" d="M3 50A47 47 0 0 0 97 50A47 49 0 0 1 3 50" fill="#bababa" transform="rotate(317.143 50 51)">
+                        <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 51;360 50 51" keyTimes="0;1" dur="0.6s" begin="0s" repeatCount="indefinite"></animateTransform>
+                    </path>
+                </svg>
+            </div>
+            <ul v-show="ready" class="hui-cityselect-content" :class="activeClasses">
+                <li class="hui-cityselect-item" v-for="index, key in columnNum" :ref="'itemBox' + index" :key="key">
+                    <template v-if="columns['columnItems' + index].length > 0">
+                        <div class="hui-cityselect-item-box">
+                            <a href="javascript:;"
+                               :key="key"
+                               v-for="item, key in columns['columnItems' + index]"
+                               :class="currentClass(item.v, item.n, index)"
+                               @click.stop="itemEvent(index, item.n, item.v, item.c)"
+                            ><span>{{item.n}}</span></a>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="hui-cityselect-item-box" @touchstart.stop.prevent=""></div>
+                    </template>
                 </li>
             </ul>
         </div>
@@ -31,21 +43,25 @@
 </template>
 
 <script type="text/babel">
-    import {addClass, removeClass, getScrollview, isIOS} from '../../../utils/assist';
+    import {isIOS, pageScroll} from '../../../utils/assist';
+    import Mask from '../../mask/src/mask.vue';
 
     export default {
         name: 'hui-cityselect',
+        components: {
+            'hui-mask': Mask
+        },
         data() {
             return {
                 show: this.value,
                 navIndex: 1,
                 nav: {
-                    txt1: '请选择',
+                    txt1: this.chooseTitle,
                     txt2: '',
                     txt3: ''
                 },
                 columns: {
-                    columnItems1: this.items,
+                    columnItems1: [],
                     columnItems2: [],
                     columnItems3: []
                 },
@@ -64,9 +80,14 @@
             city: String,
             area: String,
             done: Function,
+            callback: Function,
             title: {
                 type: String,
                 default: '所在地区'
+            },
+            chooseTitle: {
+                type: String,
+                default: '请选择'
             },
             value: {
                 type: Boolean,
@@ -80,36 +101,56 @@
         watch: {
             value(val) {
                 if (isIOS) {
-                    if (val) {
-                        addClass(this.scrollView, 'g-fix-ios-overflow-scrolling-bug');
-                    } else {
-                        removeClass(this.scrollView, 'g-fix-ios-overflow-scrolling-bug');
-                    }
+                    val ? pageScroll.lock(this.$refs.mask.$el) : pageScroll.unlock(this.$refs.mask.$el);
                 }
-
                 this.show = val;
             },
             ready(val) {
-                val && setTimeout(this.init, 0);
+                val && this.init();
             }
         },
         methods: {
             init() {
-                this.scrollView = getScrollview(this.$el);
+                if (!this.ready || !(this.items && this.items[0]) || !this.isArray(this.items)) return;
 
-                if (!this.ready)return;
+                this.getColumsNum(this.items[0]);
 
-                this.isArray(this.items) && this.provance && this.setDefalutValue(this.items, 'provance', 1);
+                this.columns.columnItems1 = this.items;
+
+                this.provance && this.$nextTick(() => {
+                    this.setDefalutValue(this.items, 'provance', 1);
+                });
+
+                this.$on('hui.cityselect.reset', () => {
+                    for (let i = 1; i <= this.columnNum; i++) {
+
+                        this.active['itemValue' + i] = '';
+                        this.active['itemName' + i] = '';
+
+                        if ((i - 1) === 0) {
+                            this.navIndex = i;
+                            this.nav['txt' + i] = this.chooseTitle;
+                            this.$refs['itemBox' + i][0].scrollTop = 0;
+                            this.backoffView(false);
+                        } else {
+                            this.nav['txt' + i] = '';
+                            this.columns['columnItems' + i] = [];
+                        }
+
+                        if (i === this.columnNum) {
+                            this.returnValue();
+                        }
+                    }
+                });
             },
             navEvent(index) {
                 if (this.columnNum > 2) {
                     if (index >= this.columnNum) {
                         this.forwardView(true);
                     } else {
-                        this.backoffView();
+                        this.backoffView(true);
                     }
                 }
-
                 this.navIndex = index;
             },
             itemEvent(index, name, value, children) {
@@ -118,22 +159,31 @@
                 this.nav['txt' + index] = name;
                 this.columns['columnItems' + (index + 1)] = children;
 
-                if (index > 1 && children && this.columnNum > 2) {
+                if (index > 1 && children && children.length > 0 && this.columnNum > 2) {
                     this.forwardView(true);
                 }
 
                 this.clearNavTxt(index);
 
                 if (index === this.columnNum || children.length <= 0) {
+                    if (index !== this.columnNum) {
+                        for (let i = this.columnNum; i >= 0; i--) {
+                            if (i > index) {
+                                this.active['itemValue' + i] = '';
+                                this.active['itemName' + i] = '';
+                                this.nav['txt' + i] = '';
+                            }
+                        }
+                    }
                     this.navIndex = index;
                     this.returnValue();
                 } else {
                     this.navIndex = index + 1;
-                    this.nav['txt' + (index + 1)] = '请选择';
+                    this.nav['txt' + (index + 1)] = this.chooseTitle;
                 }
             },
             currentClass(v, n, index) {
-                return (v && v == this.active['itemValue' + index]) || (n && n === this.active['itemName' + index]) ? 'cityselect-item-active' : '';
+                return (v && v == this.active['itemValue' + index]) || (n && n === this.active['itemName' + index]) ? 'hui-cityselect-item-active' : '';
             },
             clearNavTxt(index) {
                 for (let i = 0; i < this.columnNum; i++) {
@@ -177,24 +227,24 @@
                 });
             },
             returnValue() {
-                this.done(this.active);
+                // TODO 参数更名，即将删除
+                if (this.done) {
+                    this.done(this.active);
+                    console.warn('From VUE-HUI: The parameter "done" is destroyed, please use "callback".');
+                }
+                this.callback && this.callback(this.active);
                 this.close();
             },
             close() {
-                isIOS && removeClass(this.scrollView, 'g-fix-ios-overflow-scrolling-bug');
-
                 this.$emit('input', false);
                 this.show = false;
             },
-            backoffView() {
-                this.activeClasses = 'cityselect-move-animate cityselect-prev';
+            backoffView(animate) {
+                this.activeClasses = (animate ? 'hui-cityselect-move-animate' : '') + ' hui-cityselect-prev';
             },
             forwardView(animate) {
-                this.activeClasses = (animate ? 'cityselect-move-animate' : '') + ' cityselect-next';
+                this.activeClasses = (animate ? 'hui-cityselect-move-animate' : '') + ' hui-cityselect-next';
             }
-        },
-        created() {
-            this.items && this.items[0] && this.getColumsNum(this.items[0]);
         },
         mounted() {
             this.init();

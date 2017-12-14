@@ -16,12 +16,12 @@ body {
   font-family: arial, sans-serif;
 }
 
-body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td, iframe {
+body, img, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td, iframe {
   margin: 0;
   padding: 0;
 }
 
-img, article, aside, details, figcaption, figure, footer, header, menu, nav, section, summary, time, mark, audio, video {
+article, aside, details, figcaption, figure, footer, header, menu, nav, section, summary, time, mark, audio, video {
   display: block;
   margin: 0;
   padding: 0;
@@ -57,9 +57,13 @@ a, label, button, input, select {
 }
 
 input, select, button {
+  font: 100% tahoma, \5b8b\4f53, arial;
   vertical-align: baseline;
   border-radius: 0;
   background-color: transparent;
+}
+
+select {
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -76,8 +80,8 @@ input[type=checkbox], input[type=radio] {
   vertical-align: middle;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   margin: 0;

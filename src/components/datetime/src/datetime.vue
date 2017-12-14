@@ -1,8 +1,12 @@
 <template>
-    <div @click.stop="open" class="datetime-input">{{value}}</div>
+    <div @click.stop="open" class="hui-datetime-input">
+        <template v-if="!!value">{{value}}</template>
+        <template v-else><span class="hui-datetime-placeholder">{{placeholder}}</span></template>
+    </div>
 </template>
 
 <script type="text/babel">
+    import {pageScroll} from '../../../utils/assist';
     import Vue from 'vue';
     import Utils from './utils';
     import PickerComponent from './picker.vue';
@@ -12,7 +16,8 @@
         data() {
             return {
                 picker: null,
-                currentValue: this.value
+                currentValue: this.value,
+                tmpNum: 0
             }
         },
         props: {
@@ -23,7 +28,7 @@
             type: {
                 type: String,
                 validator(value) {
-                    return ['datetime', 'date', 'time'].indexOf(value) > -1;
+                    return ['datetime', 'date', 'time', 'month', 'day'].indexOf(value) > -1;
                 },
                 default: 'datetime'
             },
@@ -31,14 +36,14 @@
                 type: String,
                 validator(value) {
                     if (!value) return true;
-                    return Utils.isDateTimeString(value);
+                    return Utils.isDateTimeString(value) || Utils.isTimeString(value) || Utils.isMonthString(value) || Utils.isDayString(value);
                 }
             },
             endDate: {
                 type: String,
                 validator(value) {
                     if (!value) return true;
-                    return Utils.isDateTimeString(value);
+                    return Utils.isDateTimeString(value) || Utils.isTimeString(value) || Utils.isMonthString(value) || Utils.isDayString(value);
                 }
             },
             startYear: {
@@ -85,25 +90,39 @@
                 type: String,
                 default: '{value}分'
             },
+            cancelText: {
+                type: String,
+                default: '取消'
+            },
+            confirmText: {
+                type: String,
+                default: '确定'
+            },
             value: {
                 type: String,
                 validator(value) {
                     if (!value) return true;
-                    return Utils.isDateTimeString(value) || Utils.isTimeString(value);
+                    return Utils.isDateTimeString(value) || Utils.isTimeString(value) || Utils.isMonthString(value) || Utils.isDayString(value);
                 }
-            }
+            },
+            initEmit: {
+                type: Boolean,
+                default: true
+            },
+            placeholder: String,
+            callback: Function
         },
         watch: {
             value(val) {
                 if (this.currentValue != val) {
-                    this.render();
+                   this.render(false);
                 }
             },
             startDate() {
-                this.render();
+                this.render(true);
             },
             endDate() {
-                this.render();
+                this.render(true);
             }
         },
         methods: {
@@ -117,12 +136,13 @@
             removeElement() {
                 if (this.picker && this.picker.$el) document.body.removeChild(this.picker.$el);
             },
-            render() {
+            render(reloadMonth) {
                 this.removeElement();
 
                 const Picker = Vue.extend(PickerComponent);
                 const props = this._props;
-                props.parentEL = this.$el;
+
+                props.reloadMonth = reloadMonth;
 
                 this.picker = new Picker({
                     el: document.createElement('div'),
@@ -132,8 +152,12 @@
                 document.body.appendChild(this.picker.$el);
 
                 this.picker.$on('pickerConfirm', (value) => {
-                    this.currentValue = value;
-                    this.$emit('input', value);
+                    if (this.tmpNum > 0 || this.initEmit) {
+                        this.currentValue = value;
+                        this.$emit('input', value);
+                        this.callback && this.callback(value);
+                    }
+                    this.tmpNum++;
                 });
             }
         },
@@ -141,6 +165,7 @@
             this.render();
         },
         beforeDestroy() {
+            pageScroll.unlock();
             this.removeElement();
         }
     }

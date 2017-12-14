@@ -1,5 +1,5 @@
 <template>
-    <article class="m-list" :class="classes">
+    <article class="hui-list" :class="classes">
         <slot></slot>
     </article>
 </template>
@@ -17,7 +17,7 @@
         },
         computed: {
             classes() {
-                return 'list-theme' + this.theme;
+                return 'hui-list-theme' + this.theme;
             }
         }
     }

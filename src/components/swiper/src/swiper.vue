@@ -13,36 +13,40 @@
 
 <script>
   var browser = typeof window !== 'undefined'
-  if (browser) {
-    window.Swiper = require('swiper')
-  }
+  if (browser) window.Swiper = require('swiper')
   export default {
     name: 'hui-swiper',
     props: {
       options: {
         type: Object,
-        default() {
+        default: function() {
           return {
             autoplay: 3500
           }
         }
+      },
+      notNextTick: {
+        type: Boolean,
+        default: function() {
+          return false
+        }
       }
     },
-    data() {
+    data: function() {
       return {
         defaultSwiperClasses: {
           wrapperClass: 'swiper-wrapper'
         }
       }
     },
-    ready() {
+    ready: function() {
       if (!this.swiper && browser) {
         this.swiper = new Swiper(this.$el, this.options)
       }
     },
-    mounted() {
+    mounted: function() {
       var self = this
-      var mount = function () {
+      var mount = function() {
         if (!self.swiper && browser) {
           delete self.options.notNextTick
           var setClassName = false
@@ -54,21 +58,20 @@
               }
             }
           }
-          var mountInstance = function () {
+          var mountInstance = function() {
             self.swiper = new Swiper(self.$el, self.options)
           }
           setClassName ? self.$nextTick(mountInstance) : mountInstance()
         }
-        self.$emit('swiper', self.swiper);
       }
-      this.options.notNextTick ? mount() : this.$nextTick(mount)
+      (this.options.notNextTick || this.notNextTick) ? mount() : this.$nextTick(mount)
     },
-    updated(){
+    updated: function() {
       if (this.swiper) {
         this.swiper.update()
       }
     },
-    beforeDestroy() {
+    beforeDestroy: function() {
       if (this.swiper) {
         this.swiper.destroy()
         delete this.swiper

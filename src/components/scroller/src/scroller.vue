@@ -34,6 +34,9 @@
     export default {
         name: 'hui-scroller',
         props: {
+            touch:{
+                default: true
+            },
             // 自动加载
             autoLoad: Boolean,
             // 上方距离
@@ -112,14 +115,15 @@
                 }, 500);
             },
             _onTouchStart(pos) {
-                if (this.loading) return;
+                if (this.loading || !this.touch) return;
 
                 this.animateUp = false;
 
                 this._touchScrollTop = this.$el.scrollTop;
             },
             _onTouchMove(offset, pos, value, e) {
-                if (this.loading) return;
+
+                if (this.loading || !this.touch) return;
 
                 this._moveY = offset.y;
 
@@ -149,7 +153,7 @@
                 }
             },
             _onTouchEnd() {
-                if (this.loading) return;
+                if (this.loading || !this.touch) return;
 
                 var absY = Math.abs(this._moveY);
 
@@ -169,6 +173,9 @@
                 }
             },
             _onScroll(e) {
+                if(!this.touch){
+                    return;
+                }
                 if (typeof this.onScroll === "function") {
                     this.onScroll(this.$el.clientHeight, this.$el.scrollTop);
                 }
