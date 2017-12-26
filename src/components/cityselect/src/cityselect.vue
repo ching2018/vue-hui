@@ -76,7 +76,7 @@
                 type: Boolean,
                 default: true
             },
-            provance: String,
+            province: String,
             city: String,
             area: String,
             done: Function,
@@ -117,8 +117,8 @@
 
                 this.columns.columnItems1 = this.items;
 
-                this.provance && this.$nextTick(() => {
-                    this.setDefalutValue(this.items, 'provance', 1);
+                this.province && this.$nextTick(() => {
+                    this.setDefalutValue(this.items, 'province', 1);
                 });
 
                 this.$on('hui.cityselect.reset', () => {
@@ -219,7 +219,7 @@
 
                         index >= this.columnNum && this.columnNum > 2 && this.forwardView(false);
 
-                        this.isArray(childrenItems) && this.setDefalutValue(childrenItems, ['', 'provance', 'city', 'area'][index], index);
+                        this.isArray(childrenItems) && this.setDefalutValue(childrenItems, ['', 'province', 'city', 'area'][index], index);
 
                         return false;
                     }
