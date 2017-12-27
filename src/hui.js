@@ -28,7 +28,7 @@ import { Popup } from './components/popup';
 import { Prompt } from './components/prompt';
 import { PullRefresh } from './components/pullrefresh';
 import { Radio, RadioGroup } from './components/radio';
-import { Rater } from './components/rater';
+import { Rate } from './components/rate';
 import { Scroller } from './components/scroller';
 import { ScrollTab, ScrollTabPanel } from './components/scrolltab';
 import { SendCode } from './components/sendcode';
@@ -90,7 +90,7 @@ const install = function(Vue) {
     Vue.component(PullRefresh.name, PullRefresh);
     Vue.component(Radio.name, Radio);
     Vue.component(RadioGroup.name, RadioGroup);
-    Vue.component(Rater.name, Rater);
+    Vue.component(Rate.name, Rate);
     Vue.component(Scroller.name, Scroller);
     Vue.component(ScrollTab.name, ScrollTab);
     Vue.component(ScrollTabPanel.name, ScrollTabPanel);

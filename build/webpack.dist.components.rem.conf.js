@@ -28,7 +28,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.rem/prompt/index": "./src/components/prompt/index.js", //对话框
         "/lib.px/pullrefresh/index": "./src/components/pullrefresh/index.js", //下拉刷新
         "/lib.rem/radio/index": "./src/components/radio/index.js", //单选框
-        "/lib.rem/rater/index": "./src/components/rater/index.js", //评分
+        "/lib.rem/rate/index": "./src/components/rate/index.js", //评分
         "/lib.rem/scroller/index": "./src/components/scroller/index.js", //上拉加载与下拉刷新
         "/lib.rem/scrolltab/index": "./src/components/scrolltab/index.js", //滚动选项卡
         "/lib.rem/sendcode/index": "./src/components/sendcode/index.js", //发送验证码
