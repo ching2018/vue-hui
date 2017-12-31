@@ -81,22 +81,6 @@
                 this.bindEvents();
 
                 this.$on('hui.pullrefresh.finishLoad', this.resetParams);
-
-                this.showHelp();
-            },
-            showHelp() {
-                if (!this.showInitTip) return;
-
-                const _key = 'PULLREFRESH-TIP';
-                const storage = window.localStorage;
-
-                if (storage.getItem(_key) != 1) {
-                    this.showHelpTag = true;
-                    setTimeout(() => {
-                        this.showHelpTag = false;
-                    }, 5000);
-                }
-                storage.setItem(_key, 1);
             },
             bindEvents() {
                 const dragBox = this.$refs.dragBox;
