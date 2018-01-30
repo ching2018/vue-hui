@@ -15,6 +15,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.rem/countdown/index": "./src/components/countdown/index.js", //时间倒计时
         "/lib.rem/datepicker/index": "./src/components/datepicker/index.js", //时间选择器
         "/lib.rem/datetime/index": "./src/components/datetime/index.js", //时间选择器
+        "/lib.rem/editor/index": "./src/components/editor/index.js", //html5编辑器
         "/lib.rem/flexbox/index": "./src/components/flexbox/index.js", //布局
         "/lib.rem/grids/index": "./src/components/grids/index.js", //网格
         "/lib.rem/infinitescroll/index": "./src/components/infinitescroll/index.js", //滚动加载

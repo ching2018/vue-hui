@@ -27,6 +27,10 @@ module.exports = {
         }, {
             test: /\.(png|jpg|gif|svg)$/,
             loader: 'url?limit=10000'
+        }, {
+            test: /\.html$/,
+            loader: 'html-loader',
+            exclude: /node_modules/
         }]
     },
     vue: {
