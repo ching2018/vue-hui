@@ -23,7 +23,7 @@ export default {
             const config = this.$options.module.config
             config.uploadHandler(function(url) {
                 if (url) {
-                    this.$parent.execCommand(Command.INSERT_IMAGE, url)
+                    component.$parent.execCommand(Command.INSERT_IMAGE, url)
                 }
             })
         }
