@@ -26,11 +26,13 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/list/index": "./src/components/list/index.js", //列表
         "/lib.px/number/index": "./src/components/number/index.js", //数字加减
         "/lib.px/overlay/index": "./src/components/overlay/index.js", //遮罩层
+        "/lib.px/preview/index": "./src/components/preview/index.js", //表单预览
         "/lib.px/popup/index": "./src/components/popup/index.js", //弹层
         "/lib.px/prompt/index": "./src/components/prompt/index.js", //对话框
         "/lib.px/pullrefresh/index": "./src/components/pullrefresh/index.js", //下拉刷新
         "/lib.px/radio/index": "./src/components/radio/index.js", //单选框
         "/lib.px/rate/index": "./src/components/rate/index.js", //评分
+        "/lib.px/rollnotice/index": "./src/components/rollnotice/index.js", //滚动公告
         "/lib.px/scroller/index": "./src/components/scroller/index.js", //上拉加载与下拉刷新
         "/lib.px/scrolltab/index": "./src/components/scrolltab/index.js", //滚动选项卡
         "/lib.px/sendcode/index": "./src/components/sendcode/index.js", //发送验证码
@@ -38,6 +40,7 @@ module.exports = merge(distCommonWebpackConfig, {
         "/lib.px/spinner/index": "./src/components/spinner/index.js", //spinner
         "/lib.px/swiper/index": "./src/components/swiper/index.js", //图片轮播
         "/lib.px/switch/index": "./src/components/switch/index.js", //开关
+        "/lib.px/tab/index": "./src/components/tab/index.js", //选项卡
         "/lib.px/textarea/index": "./src/components/textarea/index.js", //多行文本框
         "/lib.px/toast/index": "./src/components/toast/index.js", //提示窗
         "/lib.px/upload/index": "./src/components/upload/index.js", //上传

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hui-mask v-model="show" @click.native="close" ref="mask"></hui-mask>
+        <hui-mask v-model="show" @click.native="close" ref="mask" :opacity="maskerOpacity"></hui-mask>
         <div class="hui-cityselect" :class="show ? 'hui-cityselect-active' : ''">
             <div class="hui-cityselect-header">
                 <p class="hui-cityselect-title" @touchstart.stop.prevent="">{{title}}</p>
@@ -16,18 +16,21 @@
             </div>
             <div v-if="!ready" class="hui-cityselect-loading">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-                    <path stroke="none" d="M3 50A47 47 0 0 0 97 50A47 49 0 0 1 3 50" fill="#bababa" transform="rotate(317.143 50 51)">
-                        <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 51;360 50 51" keyTimes="0;1" dur="0.6s" begin="0s" repeatCount="indefinite"></animateTransform>
+                    <path stroke="none" d="M3 50A47 47 0 0 0 97 50A47 49 0 0 1 3 50" fill="#bababa"
+                          transform="rotate(317.143 50 51)">
+                        <animateTransform attributeName="transform" type="rotate" calcMode="linear"
+                                          values="0 50 51;360 50 51" keyTimes="0;1" dur="0.6s" begin="0s"
+                                          repeatCount="indefinite"></animateTransform>
                     </path>
                 </svg>
             </div>
             <ul v-show="ready" class="hui-cityselect-content" :class="activeClasses">
                 <li class="hui-cityselect-item" v-for="index, key in columnNum" :ref="'itemBox' + index" :key="key">
-                    <template v-if="columns['columnItems' + index].length > 0">
+                    <template v-if="columnsObj['columnItems' + index] && columnsObj['columnItems' + index].length > 0">
                         <div class="hui-cityselect-item-box">
                             <a href="javascript:;"
                                :key="key"
-                               v-for="item, key in columns['columnItems' + index]"
+                               v-for="item, key in columnsObj['columnItems' + index]"
                                :class="currentClass(item.v, item.n, index)"
                                @click.stop="itemEvent(index, item.n, item.v, item.c)"
                             ><span>{{item.n}}</span></a>
@@ -60,10 +63,7 @@
                     txt2: '',
                     txt3: ''
                 },
-                columns: {
-                    columnItems1: [],
-                    columnItems2: [],
-                    columnItems3: []
+                columnsObj: {
                 },
                 active: {},
                 activeClasses: '',
@@ -76,10 +76,9 @@
                 type: Boolean,
                 default: true
             },
-            province: String,
+            provance: String,
             city: String,
             area: String,
-            done: Function,
             callback: Function,
             title: {
                 type: String,
@@ -96,6 +95,17 @@
             items: {
                 type: Array,
                 required: true
+            },
+            columns: {
+                validator(val) {
+                    return /^\d*$/.test(val);
+                }
+            },
+            maskerOpacity: {
+                validator(val) {
+                    return /^([0]|[1-9]\d*)?(\.\d*)?$/.test(val);
+                },
+                default: .5
             }
         },
         watch: {
@@ -113,15 +123,19 @@
             init() {
                 if (!this.ready || !(this.items && this.items[0]) || !this.isArray(this.items)) return;
 
-                this.getColumsNum(this.items[0]);
+                if (this.columns && ~~this.columns > 1) {
+                    this.columnNum = ~~this.columns;
+                } else {
+                    this.getColumsNum(this.items[0]);
+                }
 
-                this.columns.columnItems1 = this.items;
+                this.columnsObj.columnItems1 = this.items;
 
-                this.province && this.$nextTick(() => {
-                    this.setDefalutValue(this.items, 'province', 1);
+                this.provance && this.$nextTick(() => {
+                    this.setDefalutValue(this.items, 'provance', 1);
                 });
 
-                this.$on('hui.cityselect.reset', () => {
+                this.$on('ydui.cityselect.reset', () => {
                     for (let i = 1; i <= this.columnNum; i++) {
 
                         this.active['itemValue' + i] = '';
@@ -134,7 +148,7 @@
                             this.backoffView(false);
                         } else {
                             this.nav['txt' + i] = '';
-                            this.columns['columnItems' + i] = [];
+                            this.columnsObj['columnItems' + i] = [];
                         }
 
                         if (i === this.columnNum) {
@@ -157,7 +171,7 @@
                 this.active['itemValue' + index] = value;
                 this.active['itemName' + index] = name;
                 this.nav['txt' + index] = name;
-                this.columns['columnItems' + (index + 1)] = children;
+                this.columnsObj['columnItems' + (index + 1)] = children;
 
                 if (index > 1 && children && children.length > 0 && this.columnNum > 2) {
                     this.forwardView(true);
@@ -204,7 +218,7 @@
             setDefalutValue(items, currentValue, index) {
                 items.every((item, key) => {
                     if (item.v == this[currentValue] || item.n === this[currentValue]) {
-                        const childrenItems = this.columns['columnItems' + (index + 1)] = item.c;
+                        const childrenItems = this.columnsObj['columnItems' + (index + 1)] = item.c;
                         const itemBox = this.$refs['itemBox' + index][0];
 
                         itemBox.scrollTop = key * this.itemHeight - itemBox.offsetHeight / 3;
@@ -219,7 +233,7 @@
 
                         index >= this.columnNum && this.columnNum > 2 && this.forwardView(false);
 
-                        this.isArray(childrenItems) && this.setDefalutValue(childrenItems, ['', 'province', 'city', 'area'][index], index);
+                        this.isArray(childrenItems) && this.setDefalutValue(childrenItems, ['', 'provance', 'city', 'area'][index], index);
 
                         return false;
                     }
@@ -227,11 +241,6 @@
                 });
             },
             returnValue() {
-                // TODO 参数更名，即将删除
-                if (this.done) {
-                    this.done(this.active);
-                    console.warn('From VUE-HUI: The parameter "done" is destroyed, please use "callback".');
-                }
                 this.callback && this.callback(this.active);
                 this.close();
             },
@@ -249,7 +258,7 @@
         mounted() {
             this.init();
         },
-        destroyed() {
+        beforeDestroy() {
             this.close();
         }
     }

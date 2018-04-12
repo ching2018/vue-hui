@@ -26,9 +26,6 @@
     export default {
         name: 'hui-pullrefresh',
         props: {
-            onInfinite: {
-                type: Function
-            },
             callback: {
                 type: Function
             },
@@ -80,7 +77,23 @@
 
                 this.bindEvents();
 
-                this.$on('hui.pullrefresh.finishLoad', this.resetParams);
+                this.$on('ydui.pullrefresh.finishLoad', this.resetParams);
+
+                this.showHelp();
+            },
+            showHelp() {
+                if (!this.showInitTip) return;
+
+                const _key = 'PULLREFRESH-TIP';
+                const storage = window.localStorage;
+
+                if (storage.getItem(_key) != 1) {
+                    this.showHelpTag = true;
+                    setTimeout(() => {
+                        this.showHelpTag = false;
+                    }, 5000);
+                }
+                storage.setItem(_key, 1);
             },
             bindEvents() {
                 const dragBox = this.$refs.dragBox;
@@ -207,11 +220,6 @@
             },
             triggerLoad() {
                 this.touches.loading = true;
-                // TODO 参数更名，即将删除
-                if (this.onInfinite) {
-                    this.onInfinite();
-                    console.warn('From VUE-HUI: The parameter "onInfinite" is destroyed, please use "callback".');
-                }
                 this.callback && this.callback();
             },
             resetParams() {

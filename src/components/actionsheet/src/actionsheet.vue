@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hui-mask v-model="show" @click.native="close"></hui-mask>
+        <hui-mask v-model="show" @click.native="close" :opacity="maskerOpacity"></hui-mask>
         <div class="hui-actionsheet" :class="show ? 'hui-actionsheet-active' : ''">
             <a v-for="item, key in items" @click.stop="itemClick(item)" href="javascript:;" class="hui-actionsheet-item" :key="key">{{item.label}}</a>
             <a v-if="cancel" @click.stop="close" href="javascript:;" class="hui-actionsheet-action">{{cancel}}</a>
@@ -29,9 +29,15 @@
             },
             items: {
                 type: Array,
-                require: true
+                required: true
             },
-            cancel: String
+            cancel: String,
+            maskerOpacity: {
+                validator(val) {
+                    return /^([0]|[1-9]\d*)?(\.\d*)?$/.test(val);
+                },
+                default: .5
+            }
         },
         watch: {
             value(val) {
@@ -44,11 +50,6 @@
         methods: {
             itemClick(item) {
                 if(item) {
-                    // TODO 参数更名，即将删除
-                    if (typeof item.method === 'function') {
-                        item.method(item);
-                        console.warn('From VUE-HUI: The parameter "method" is destroyed, please use "callback".');
-                    }
                     typeof item.callback === 'function' && item.callback(item);
                     !item.stay && this.close();
                 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hui-mask v-model="show" @click.native="close"></hui-mask>
+        <hui-mask v-model="show" @click.native="close" :opacity="maskerOpacity"></hui-mask>
         <div class="hui-keyboard" :class="show ? 'hui-keyboard-active' : ''">
             <div class="hui-keyboard-head">
                 <strong>{{inputText}}</strong>
@@ -51,9 +51,6 @@
             }
         },
         props: {
-            inputDone: {
-                type: Function
-            },
             callback: {
                 type: Function
             },
@@ -67,7 +64,7 @@
             },
             title: {
                 type: String,
-                default: '安全键盘'
+                default: 'YDUI安全键盘'
             },
             cancelText: {
                 type: String,
@@ -80,6 +77,12 @@
             triggerClose: {
                 type: Boolean,
                 default: true
+            },
+            maskerOpacity: {
+                validator(val) {
+                    return /^([0]|[1-9]\d*)?(\.\d*)?$/.test(val);
+                },
+                default: .5
             }
         },
         watch: {
@@ -98,22 +101,17 @@
             },
             nums(val) {
                 if (val.length >= 6) {
-                    // TODO 参数更名，即将删除
-                    if (this.inputDone) {
-                        this.inputDone(val);
-                        console.warn('From VUE-HUI: The parameter "inputDone" is destroyed, please use "callback".');
-                    }
                     this.callback && this.callback(val);
                 }
             }
         },
         methods: {
             init() {
-                this.$on('hui.keyboard.error', (error) => {
+                this.$on('ydui.keyboard.error', (error) => {
                     this.setError(error);
                 });
 
-                this.$on('hui.keyboard.close', this.close);
+                this.$on('ydui.keyboard.close', this.close);
             },
             numclick(num) {
                 this.error = '';
@@ -161,7 +159,7 @@
 
             this.$nextTick(this.init);
         },
-        destroyed() {
+        beforeDestroy() {
             this.close();
             pageScroll.unlock();
         }

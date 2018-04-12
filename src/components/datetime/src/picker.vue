@@ -1,6 +1,6 @@
 <template>
     <div>
-        <hui-mask v-model="show" @click.native="close"></hui-mask>
+        <hui-mask v-model="show" @click.native="close" :opacity="maskerOpacity"></hui-mask>
         <div class="hui-datetime" :class="show ? 'hui-datetime-active' : ''">
             <div class="hui-datetime-head">
                 <a href="javascript:;" @click.stop="close">{{cancelText}}</a>
@@ -73,7 +73,8 @@
                 startYear: 0,
                 endYear: 0,
                 startHour: 0,
-                endHour: 23
+                endHour: 23,
+                maskerOpacity: .5
             }
         },
         components: {

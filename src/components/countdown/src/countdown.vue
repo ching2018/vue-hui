@@ -107,7 +107,7 @@
                 this.run();
             });
         },
-        destroyed() {
+        beforeDestroy() {
             clearInterval(this.timer);
         }
     }
