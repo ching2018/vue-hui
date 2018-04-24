@@ -77,7 +77,7 @@
 
                 this.bindEvents();
 
-                this.$on('ydui.pullrefresh.finishLoad', this.resetParams);
+                this.$on('hui.pullrefresh.finishLoad', this.resetParams);
 
                 this.showHelp();
             },

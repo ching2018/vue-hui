@@ -64,7 +64,7 @@
             },
             title: {
                 type: String,
-                default: 'YDUI安全键盘'
+                default: '安全键盘'
             },
             cancelText: {
                 type: String,
@@ -107,11 +107,11 @@
         },
         methods: {
             init() {
-                this.$on('ydui.keyboard.error', (error) => {
+                this.$on('hui.keyboard.error', (error) => {
                     this.setError(error);
                 });
 
-                this.$on('ydui.keyboard.close', this.close);
+                this.$on('hui.keyboard.close', this.close);
             },
             numclick(num) {
                 this.error = '';

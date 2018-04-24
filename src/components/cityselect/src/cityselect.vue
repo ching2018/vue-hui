@@ -135,7 +135,7 @@
                     this.setDefalutValue(this.items, 'provance', 1);
                 });
 
-                this.$on('ydui.cityselect.reset', () => {
+                this.$on('hui.cityselect.reset', () => {
                     for (let i = 1; i <= this.columnNum; i++) {
 
                         this.active['itemValue' + i] = '';
