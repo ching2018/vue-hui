@@ -158,7 +158,7 @@
                 document.body.appendChild(this.picker.$el);
 
                 this.picker.$on('pickerConfirm', (value) => {
-                    if (this.tmpNum > 0 || this.initEmit) {
+                    if (this.tmpNum > 1 || this.initEmit) {
                         this.currentValue = value;
                         this.$emit('input', value);
                         this.callback && this.callback(value);
