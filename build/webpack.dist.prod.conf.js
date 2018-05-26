@@ -4,7 +4,7 @@ const distCommonWebpackConfig = require('./webpack.dist.common.conf');
 
 module.exports = merge(distCommonWebpackConfig, {
     entry: {
-        hui: './src/hui.js'
+        'hui.rem': './src/hui.js'
     },
     vue: {
         loaders: {
