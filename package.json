@@ -3,7 +3,7 @@
   "description": "A mobile components Library with Vue2.js from HoldSkill.",
   "version": "0.0.3",
   "author": "lee",
-  "main": "dist/hui.js",
+  "main": "dist/hui.rem.js",
   "style": "dist/hui.css",
   "keywords": [
     "HUI App",
